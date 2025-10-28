@@ -3,6 +3,79 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-DEVICE="dm1q"
 
-add_lunch_combo twrp_$DEVICE-eng
+#
+#	This file is part of the OrangeFox Recovery Project
+# 	Copyright (C) 2020-2021 The OrangeFox Recovery Project
+#
+#	OrangeFox is free software: you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation, either version 3 of the License, or
+#	any later version.
+#
+#	OrangeFox is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+# 	This software is released under GPL version 3 or any later version.
+#	See <http://www.gnu.org/licenses/>.
+#
+# 	Please maintain this if you use this script or any part of it
+#
+FDEVICE="dm1q"
+#set -o xtrace
+
+fox_get_target_device() {
+local chkdev=$(echo "$BASH_SOURCE" | grep -w $FDEVICE)
+   if [ -n "$chkdev" ]; then 
+      FOX_BUILD_DEVICE="$FDEVICE"
+   else
+      chkdev=$(set | grep BASH_ARGV | grep -w $FDEVICE)
+      [ -n "$chkdev" ] && FOX_BUILD_DEVICE="$FDEVICE"
+   fi
+}
+
+if [ -z "$1" -a -z "$FOX_BUILD_DEVICE" ]; then
+   fox_get_target_device
+fi
+
+if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
+
+# OrangeFox variant
+export FOX_VARIANT=Beta
+
+# OrangeFox build
+export FOX_VANILLA_BUILD=1
+export FOX_MAINTAINER_PATCH_VERSION="01-cola2261"
+
+# OrangeFox Addons
+# export FOX_ENABLE_APP_MANAGER=1
+
+# Binaries & Tools
+export FOX_USE_BASH_SHELL=1
+export FOX_ASH_IS_BASH=1
+export FOX_USE_NANO_EDITOR=1
+export FOX_USE_TAR_BINARY=1
+export FOX_USE_SED_BINARY=1
+export FOX_USE_XZ_UTILS=1
+export FOX_USE_LZ4_BINARY=1
+export FOX_USE_ZSTD_BINARY=1
+export FOX_USE_DATE_BINARY=1
+
+# Disable OFOX SEANDROIDENFORCE
+export FOX_NO_SAMSUNG_SPECIAL=1
+
+# Delete AROMAFM on zip as the device does not support it
+export FOX_DELETE_AROMAFM=1
+
+	lunch twrp_$FDEVICE-eng
+	# let's see what are our build VARs
+	if [ -n "$FOX_BUILD_LOG_FILE" -a -f "$FOX_BUILD_LOG_FILE" ]; then
+  	   export | grep "FOX" >> $FOX_BUILD_LOG_FILE
+  	   export | grep "OF_" >> $FOX_BUILD_LOG_FILE
+   	   export | grep "TARGET_" >> $FOX_BUILD_LOG_FILE
+  	   export | grep "TW_" >> $FOX_BUILD_LOG_FILE
+ 	fi
+fi
+#
