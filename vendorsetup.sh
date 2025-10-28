@@ -3,6 +3,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-DEVICE="dm2q"
+DEVICE="dm1q"
 
 add_lunch_combo twrp_$DEVICE-eng
