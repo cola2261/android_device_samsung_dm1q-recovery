@@ -16,8 +16,3 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 109051904
 
 # Inherit from common tree
 include device/samsung/sm8550-common/BoardConfigCommon.mk
-
-# Brighness values
-TW_MAX_BRIGHTNESS := 612
-# 35 percentage of max
-TW_DEFAULT_BRIGHTNESS := 214
